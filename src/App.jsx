@@ -9,15 +9,22 @@ function App() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    axios
-      .get(
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
-      )
-      .then((res) => {
-        setCoins(res.data);
-        console.log(res.data);
-      })
-      .catch((error) => console.log(error));
+    const fetchData = () => {
+      axios
+        .get(
+          'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
+        )
+        .then((res) => {
+          setCoins(res.data);
+          console.log('Updated data:', res.data);
+        })
+        .catch((error) => console.log(error));
+    };
+
+    fetchData(); // Initial fetch
+    const interval = setInterval(fetchData, 15000); // Refresh every 15 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   const handleChange = (e) => {
